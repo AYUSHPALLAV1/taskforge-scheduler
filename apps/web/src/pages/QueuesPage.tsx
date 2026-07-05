@@ -3,12 +3,15 @@ import { useQuery } from '@tanstack/react-query';
 import { Layers, Plus, Pause, Play } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import api from '../lib/api';
+import { useUiStore } from '../store';
 
 export default function QueuesPage() {
+  const { selectedProjectId } = useUiStore();
   const { data: orgs } = useQuery({ queryKey: ['orgs'], queryFn: () => api.listOrgs() });
-  const orgId = (orgs as any)?.[0]?.id;
+  const orgId = (orgs as any)?.data?.[0]?.id;
   const { data: projects } = useQuery({ queryKey: ['projects', orgId], queryFn: () => api.listProjects(orgId), enabled: !!orgId });
-  const projectId = (projects as any)?.data?.[0]?.id;
+  const projectId = selectedProjectId || (projects as any)?.data?.[0]?.id;
+
 
   const { data: queuesResp, refetch } = useQuery({
     queryKey: ['queues', projectId], queryFn: () => api.listQueues(projectId!), enabled: !!projectId, refetchInterval: 15000,

@@ -68,7 +68,7 @@ export default function WorkflowsPage() {
   const queryClient = useQueryClient();
 
   const { data: orgs } = useQuery({ queryKey: ['orgs'], queryFn: () => api.listOrgs() });
-  const orgId = (orgs as any)?.[0]?.id;
+  const orgId = (orgs as any)?.data?.[0]?.id;
   const { data: projects } = useQuery({ queryKey: ['projects', orgId], queryFn: () => api.listProjects(orgId), enabled: !!orgId });
   const projectId = (projects as any)?.data?.[0]?.id;
 

@@ -12,7 +12,7 @@ export default function MembersPage() {
   const queryClient = useQueryClient();
 
   const { data: orgs } = useQuery({ queryKey: ['orgs'], queryFn: () => api.listOrgs() });
-  const orgId = (orgs as any)?.[0]?.id;
+  const orgId = (orgs as any)?.data?.[0]?.id;
 
   const { data: membersResp, isLoading } = useQuery({
     queryKey: ['members', orgId], queryFn: () => api.listMembers(orgId), enabled: !!orgId,

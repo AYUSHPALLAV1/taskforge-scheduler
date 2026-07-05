@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Search, Plus, RefreshCw, Filter, ChevronRight, ChevronLeft } from 'lucide-react';
 import api from '../lib/api';
 import StatusBadge from '../components/StatusBadge';
+import { useUiStore } from '../store';
 
 const STATUSES = ['', 'Queued', 'Scheduled', 'Running', 'Completed', 'Failed', 'DeadLetter', 'Cancelled'];
 
@@ -15,26 +16,30 @@ export default function JobsPage() {
   const [createForm, setCreateForm] = useState({ queueId: '', type: 'send-email', payload: '{}', priority: '5' });
   const queryClient = useQueryClient();
   const navigate = useNavigate();
+  const { selectedProjectId } = useUiStore();
 
   const params: Record<string, string> = { limit: '50' };
   if (statusFilter) params.status = statusFilter;
   if (cursor) params.cursor = cursor;
+  if (selectedProjectId) params.projectId = selectedProjectId;
 
   const { data, isFetching, refetch } = useQuery({
     queryKey: ['jobs', params],
     queryFn: () => api.listJobs(params),
     refetchInterval: 10000,
+    enabled: !!selectedProjectId,
   });
 
   const jobs: any[] = (data as any)?.data || [];
   const meta: any = (data as any)?.meta || {};
 
-  const { data: queuesAny } = useQuery({ queryKey: ['all-queues'], queryFn: () => api.listQueues('') });
+  const { data: queuesAny } = useQuery({ queryKey: ['all-queues', selectedProjectId], queryFn: () => api.listQueues(selectedProjectId!), enabled: !!selectedProjectId });
 
   const createMutation = useMutation({
-    mutationFn: (d: any) => api.createJob(d),
+    mutationFn: (d: any) => api.createJob({ ...d, projectId: selectedProjectId }),
     onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['jobs'] }); setShowCreate(false); },
   });
+
 
   const filtered = jobs.filter((j) =>
     !search ||

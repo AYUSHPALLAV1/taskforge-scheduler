@@ -7,6 +7,7 @@ import {
 import { useAuthStore, useUiStore } from '../store';
 import api from '../lib/api';
 import { useWebSocket } from '../hooks/useWebSocket';
+import { useBootstrapContext } from '../hooks/useBootstrapContext';
 
 const navItems = [
   { to: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
@@ -24,8 +25,12 @@ export default function Layout() {
   const { selectedProjectId } = useUiStore();
   const navigate = useNavigate();
 
+  // Bootstrap org + project context on first load
+  useBootstrapContext();
+
   // Connect to WebSocket globally once layout mounts
   useWebSocket(selectedProjectId);
+
 
   const handleLogout = async () => {
     try { await api.logout(); } catch (_) {}
