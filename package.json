@@ -1,0 +1,24 @@
+{
+  "name": "taskforge",
+  "private": true,
+  "version": "1.0.0",
+  "description": "TaskForge — Distributed Job Scheduling Platform",
+  "scripts": {
+    "dev": "pnpm --parallel -r run dev",
+    "build": "pnpm -r run build",
+    "test": "pnpm -r run test",
+    "test:e2e": "pnpm --filter @taskforge/api run test:e2e",
+    "db:migrate": "pnpm --filter @taskforge/db run migrate",
+    "db:seed": "pnpm --filter @taskforge/db run seed",
+    "db:studio": "pnpm --filter @taskforge/db run studio",
+    "lint": "pnpm -r run lint",
+    "format": "pnpm -r run format"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.0"
+  },
+  "engines": {
+    "node": ">=22.0.0",
+    "pnpm": ">=9.0.0"
+  }
+}
