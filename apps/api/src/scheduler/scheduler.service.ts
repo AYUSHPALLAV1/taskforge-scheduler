@@ -36,25 +36,24 @@ export class SchedulerService {
   }
 
   // ===========================
-  // MAIN TICK — every 1 second
+  // MAIN TICK — every 10 seconds (reduced to protect Neon free-tier connection pool)
   // ===========================
-  @Cron('* * * * * *') // every second
+  @Cron('*/10 * * * * *') // every 10 seconds
   async schedulerTick(): Promise<void> {
     const isLeader = await this.acquireLeadership();
     if (!isLeader) return;
 
-    await Promise.allSettled([
-      this.promoteScheduledJobs(),
-      this.promoteRecurringJobs(),
-      this.reaperScan(),
-      this.moveToDlq(),
-    ]);
+    // Run SERIALLY to avoid saturating the DB connection pool
+    try { await this.promoteScheduledJobs(); } catch (_) {}
+    try { await this.promoteRecurringJobs(); } catch (_) {}
+    try { await this.reaperScan(); } catch (_) {}
+    try { await this.moveToDlq(); } catch (_) {}
   }
 
   // ===========================
-  // OUTBOX DISPATCHER — every 500ms
+  // OUTBOX DISPATCHER — every 5 seconds (reduced from 500ms)
   // ===========================
-  @Cron('*/1 * * * * *')
+  @Cron('*/5 * * * * *')
   async dispatchOutboxEvents(): Promise<void> {
     const events = await this.prisma.eventOutbox.findMany({
       where: { dispatchedAt: null },

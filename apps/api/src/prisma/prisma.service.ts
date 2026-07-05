@@ -6,14 +6,18 @@ export class PrismaService extends PrismaClient implements OnModuleInit, OnModul
   private readonly logger = new Logger(PrismaService.name);
 
   constructor() {
+    // In development: use direct URL to avoid pgbouncer connection_limit issues.
+    // In production (Render): use DATABASE_URL_POOLED for scalability.
+    const isProd = process.env.NODE_ENV === 'production';
     super({
       datasources: {
         db: {
-          url: process.env.DATABASE_URL_POOLED || process.env.DATABASE_URL,
+          url: isProd
+            ? (process.env.DATABASE_URL_POOLED || process.env.DATABASE_URL)
+            : (process.env.DATABASE_URL || process.env.DATABASE_URL_POOLED),
         },
       },
-      // Only log errors in all environments — query logging floods the connection pool
-      log: ['error'],
+      log: ['error'], // Always errors-only — query logging floods the pool
     });
   }
 

@@ -43,27 +43,18 @@ export default function Layout() {
       {/* Sidebar */}
       <aside className="sidebar">
         {/* Logo */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '4px 12px', marginBottom: 20 }}>
+        <div style={{ padding: '8px', marginBottom: 16 }}>
           <div style={{
-            width: 32, height: 32, borderRadius: 8,
+            width: 40, height: 40, borderRadius: 20,
             background: 'var(--gradient-primary)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
           }}>
-            <Zap size={16} color="white" />
-          </div>
-          <div>
-            <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--text-primary)', lineHeight: 1.2 }}>TaskForge</div>
-            <div style={{ fontSize: 10, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Scheduler</div>
+            <Zap size={20} color="white" />
           </div>
         </div>
 
-        {/* Live indicator */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '4px 12px', marginBottom: 12 }}>
-          <span className="live-dot" />
-          <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>Live updates</span>
-        </div>
-
-        <div style={{ height: 1, background: 'var(--border)', margin: '4px 0 12px' }} />
+        <div style={{ width: '40px', height: 1, background: 'var(--border)', marginBottom: 8 }} />
 
         {/* Nav items */}
         {navItems.map(({ to, icon: Icon, label }) => (
@@ -72,26 +63,26 @@ export default function Layout() {
             to={to}
             className={({ isActive }) => `sidebar-item ${isActive ? 'active' : ''}`}
           >
-            <Icon size={15} />
-            <span style={{ flex: 1 }}>{label}</span>
+            <div className="icon-wrapper">
+              <Icon size={20} />
+            </div>
+            <span className="label">{label}</span>
             {to === '/dlq' && (
-              <span style={{ fontSize: 10, background: 'rgba(239,68,68,0.2)', color: '#f87171', borderRadius: 99, padding: '1px 6px' }}>!</span>
+              <span className="label" style={{ marginLeft: 8, fontSize: 10, background: 'rgba(239,68,68,0.15)', color: '#ef4444', borderRadius: 99, padding: '2px 6px' }}>!</span>
             )}
           </NavLink>
         ))}
 
         {/* Spacer */}
         <div style={{ flex: 1 }} />
-        <div style={{ height: 1, background: 'var(--border)', margin: '12px 0' }} />
+        <div style={{ width: '40px', height: 1, background: 'var(--border)', margin: '16px 0' }} />
 
         {/* User section */}
-        <div style={{ padding: '4px 12px' }}>
-          <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-primary)', marginBottom: 2 }}>{user?.name}</div>
-          <div style={{ fontSize: 11, color: 'var(--text-muted)', marginBottom: 10 }}>{user?.email}</div>
-          <button className="btn btn-ghost btn-sm" onClick={handleLogout} style={{ width: '100%', justifyContent: 'flex-start', gap: 8 }}>
-            <LogOut size={13} />
-            Sign out
-          </button>
+        <div className="sidebar-item" onClick={handleLogout} style={{ width: 48, overflow: 'hidden' }}>
+          <div className="icon-wrapper">
+            <LogOut size={20} />
+          </div>
+          <span className="label">Sign out</span>
         </div>
       </aside>
 

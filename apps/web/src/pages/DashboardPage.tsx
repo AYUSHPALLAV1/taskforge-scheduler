@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import api from '../lib/api';
 import StatusBadge from '../components/StatusBadge';
+import ProfileCard from '../components/ProfileCard';
 import { Link } from 'react-router-dom';
 
 const C = {
@@ -182,7 +183,9 @@ export default function DashboardPage() {
   const recentJobs = jobs.slice(0, 8);
 
   return (
-    <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+    <div className="animate-fade-in" style={{ display: 'flex', gap: 24, alignItems: 'flex-start' }}>
+      {/* ── Left Column ── */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 24, flex: 1 }}>
 
       {/* ── Header ── */}
       <div className="page-header">
@@ -499,6 +502,42 @@ export default function DashboardPage() {
         ))}
         <div style={{ marginLeft: 'auto', fontSize: 11, color: 'var(--text-muted)' }}>
           Auto-refreshes every 8s
+        </div>
+      </div>
+      </div>
+
+      {/* ── Right Column ── */}
+      <div style={{ width: 320, flexShrink: 0, position: 'sticky', top: 24, display: 'flex', flexDirection: 'column', gap: 32 }}>
+        <ProfileCard />
+        
+        {/* Blended Video Element */}
+        <div style={{
+          position: 'relative',
+          width: '120%', // Make container large enough so edges don't clip
+          marginLeft: 'auto', 
+          transform: 'translateX(30px)', 
+          aspectRatio: '1/1',
+          overflow: 'hidden',
+          WebkitMaskImage: 'radial-gradient(circle at center, black 40%, transparent 85%)', // Softer blend
+          maskImage: 'radial-gradient(circle at center, black 40%, transparent 85%)',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          mixBlendMode: 'multiply', // This perfectly blends white/grey video backgrounds into the page
+        }}>
+          <video 
+            src="/videos/coffee_cup_video.mp4" 
+            autoPlay 
+            loop 
+            muted 
+            playsInline
+            style={{ 
+              width: '100%', 
+              height: '100%', 
+              objectFit: 'cover',
+              position: 'absolute',
+            }}
+          />
         </div>
       </div>
     </div>
