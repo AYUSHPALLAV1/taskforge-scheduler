@@ -59,7 +59,7 @@ class WorkflowsController {
     const nodeMap = new Map<string, string>(); // nodeKey → workflowJobId
     for (const node of dto.nodes) {
       const wj = await this.prisma.workflowJob.create({
-        data: { workflowId: workflow.id, nodeKey: node.nodeKey, jobTemplate: node.jobTemplate },
+        data: { workflowId: workflow.id, nodeKey: node.nodeKey, jobTemplate: node.jobTemplate as any },
       });
       nodeMap.set(node.nodeKey, wj.id);
     }

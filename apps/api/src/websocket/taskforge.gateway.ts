@@ -37,25 +37,38 @@ export class TaskforgeGateway
     private readonly redis: RedisService,
   ) {}
 
-  afterInit(server: Server) {
+  afterInit(server: any) {
     // Attach Redis adapter for cross-instance fan-out
     const redisUrl = process.env.REDIS_URL;
     if (redisUrl) {
-      const pubClient = new Redis(redisUrl, { lazyConnect: false });
-      const subClient = pubClient.duplicate();
-      server.adapter(createAdapter(pubClient, subClient));
-      this.logger.log('✅ Socket.io Redis adapter attached');
+      try {
+        const pubClient = new Redis(redisUrl, { lazyConnect: false });
+        const subClient = pubClient.duplicate();
+        // Use this.server (the Socket.io Server) not the afterInit argument
+        if (this.server && typeof this.server.adapter === 'function') {
+          this.server.adapter(createAdapter(pubClient, subClient));
+          this.logger.log('✅ Socket.io Redis adapter attached');
+        } else {
+          this.logger.warn('⚠ Redis adapter skipped — server not ready');
+        }
+      } catch (err) {
+        this.logger.warn('⚠ Redis adapter attach failed (local dev)', err.message);
+      }
     }
 
     // Subscribe to outbox events dispatched by SchedulerService
-    this.redis.getSubscriber().on('message', (channel, message) => {
-      try {
-        const data = JSON.parse(message);
-        this.broadcastEvent(data);
-      } catch (_e) {}
-    });
-
-    this.redis.getSubscriber().subscribe('taskforge:events').catch(() => {});
+    const sub = this.redis.getSubscriber?.();
+    if (sub) {
+      sub.on('message', (channel, message) => {
+        try {
+          const data = JSON.parse(message);
+          this.broadcastEvent(data);
+        } catch (_e) {}
+      });
+      sub.subscribe('taskforge:events').catch(() => {});
+    } else {
+      this.logger.warn('⚠ Redis subscriber not available — real-time events disabled');
+    }
     this.logger.log('✅ WebSocket Gateway initialized');
   }
 

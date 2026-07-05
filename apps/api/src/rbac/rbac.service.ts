@@ -87,7 +87,7 @@ export class RbacService {
     const member = await this.prisma.organizationMember.findFirst({
       where: { orgId, userId },
     });
-    return member?.role || null;
+    return (member?.role as any) || null;
   }
 
   async invalidateCache(userId: string, orgId: string): Promise<void> {
@@ -110,7 +110,7 @@ export class RbacService {
           action: params.action,
           resourceType: params.resourceType,
           resourceId: params.resourceId,
-          metadata: params.metadata || {},
+          metadata: (params.metadata || {}) as any,
         },
       });
     } catch (err) {
