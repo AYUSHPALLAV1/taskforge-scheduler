@@ -5,7 +5,7 @@ import {
 import { PrismaService } from '../prisma/prisma.service';
 import { RedisService } from '../redis/redis.service';
 import { CreateJobDto, ListJobsDto, BatchCreateJobDto } from './dto/job.dto';
-import { JobStatus, Prisma } from '@prisma/client';
+import { JobStatus } from '../common/enums';
 import { createHash } from 'crypto';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -129,7 +129,7 @@ export class JobsService {
   // ===========================
   async listJobs(projectId: string, dto: ListJobsDto) {
     const limit = dto.limit || 50;
-    const where: Prisma.JobWhereInput = { projectId };
+    const where: any = { projectId };
 
     if (dto.status) where.status = dto.status as JobStatus;
     if (dto.queueId) where.queueId = dto.queueId;
@@ -241,7 +241,7 @@ export class JobsService {
   // GET EXECUTION LOGS (cursor paginated)
   // ===========================
   async getExecutionLogs(executionId: string, cursor?: string, limit = 100) {
-    const where: Prisma.JobLogWhereInput = { jobExecutionId: executionId };
+    const where: any = { jobExecutionId: executionId };
     if (cursor) {
       where.timestamp = { gt: new Date(Buffer.from(cursor, 'base64').toString()) };
     }

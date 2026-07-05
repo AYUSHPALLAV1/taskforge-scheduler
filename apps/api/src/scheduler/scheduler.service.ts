@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { PrismaService } from '../prisma/prisma.service';
 import { RedisService } from '../redis/redis.service';
-import { JobStatus, WorkerStatus } from '@prisma/client';
+import { JobStatus, WorkerStatus } from '../common/enums';
 import * as cronParser from 'cron-parser';
 
 @Injectable()

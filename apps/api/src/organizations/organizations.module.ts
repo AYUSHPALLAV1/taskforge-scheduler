@@ -5,7 +5,7 @@ import { IsString, IsOptional, IsEmail, IsEnum } from 'class-validator';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { PrismaService } from '../prisma/prisma.service';
 import { RbacService } from '../rbac/rbac.service';
-import { OrgRole } from '@prisma/client';
+import { OrgRole } from '../common/enums';
 
 class CreateOrgDto {
   @IsString() name: string;

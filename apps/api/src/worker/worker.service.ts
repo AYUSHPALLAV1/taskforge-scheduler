@@ -3,7 +3,7 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { RedisService } from '../redis/redis.service';
-import { JobStatus, ExecutionStatus, WorkerStatus } from '@prisma/client';
+import { JobStatus, ExecutionStatus, WorkerStatus } from '../common/enums';
 import * as os from 'os';
 
 // ===========================

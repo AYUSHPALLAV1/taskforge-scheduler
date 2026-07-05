@@ -1,0 +1,41 @@
+services:
+  # ============================
+  # API + Worker (single Render service — free tier)
+  # ============================
+  - type: web
+    name: taskforge-api
+    runtime: node
+    region: oregon
+    plan: free
+    buildCommand: "npm install -g pnpm && pnpm install --frozen-lockfile && pnpm --filter @taskforge/db exec prisma generate --schema=prisma/schema.prisma && pnpm --filter @taskforge/db exec prisma migrate deploy --schema=prisma/schema.prisma && pnpm --filter @taskforge/api run build"
+    startCommand: "node apps/api/dist/main"
+    healthCheckPath: /healthz
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3000
+      - key: DATABASE_URL
+        sync: false
+      - key: DATABASE_URL_POOLED
+        sync: false
+      - key: REDIS_URL
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_REFRESH_SECRET
+        generateValue: true
+      - key: CORS_ORIGIN
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: WORKER_CONCURRENCY
+        value: 5
+      - key: SCHEDULER_LEADER_LOCK_TTL_MS
+        value: 10000
+      - key: WORKER_HEARTBEAT_MS
+        value: 10000
+      - key: GEMINI_MODEL
+        value: gemini-1.5-flash
+      - key: GEMINI_RPM_LIMIT
+        value: 10

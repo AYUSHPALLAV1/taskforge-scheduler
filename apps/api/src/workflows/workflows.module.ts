@@ -6,7 +6,7 @@ import { Type } from 'class-transformer';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { PrismaService } from '../prisma/prisma.service';
 import { SchedulerService } from '../scheduler/scheduler.service';
-import { DependencyCondition, JobStatus } from '@prisma/client';
+import { DependencyCondition, JobStatus } from '../common/enums';
 
 class WorkflowNodeDto {
   @IsString() nodeKey: string;
@@ -235,5 +235,8 @@ class DlqController {
   }
 }
 
-@Module({ controllers: [WorkflowsController, DlqController], imports: [] })
+import { SchedulerModule } from '../scheduler/scheduler.module';
+
+@Module({ controllers: [WorkflowsController, DlqController], imports: [SchedulerModule] })
 export class WorkflowsModule {}
+

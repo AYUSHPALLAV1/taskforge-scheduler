@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { RedisService } from '../redis/redis.service';
-import { OrgRole } from '@prisma/client';
+import { OrgRole } from '../common/enums';
 
 // Complete permission matrix per role
 const ROLE_PERMISSIONS: Record<OrgRole, string[]> = {

@@ -37,7 +37,7 @@ export default function SettingsPage() {
               { label: 'JWT Access Token Expiry', value: '15 minutes' },
               { label: 'Refresh Token Rotation', value: 'Enabled (auto-revoke on replay)' },
               { label: 'Password Hashing', value: 'argon2id (memory=65536)' },
-              { label: 'CORS Origin', value: process.env.CORS_ORIGIN || 'localhost:5173' },
+              { label: 'CORS Origin', value: import.meta.env.VITE_CORS_ORIGIN || 'localhost:5173' },
             ].map(({ label, value }) => (
               <div key={label} style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 0', borderBottom: '1px solid var(--border)' }}>
                 <span style={{ fontSize: 13, color: 'var(--text-secondary)' }}>{label}</span>
